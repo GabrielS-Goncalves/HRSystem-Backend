@@ -47,7 +47,6 @@ export const updateUserRoute = async (req, res) => {
     }
 
     const userInformations = await usersTable.updateOne({
-      _id: id,
       name: name,
       surename: surename,
       email: email,
