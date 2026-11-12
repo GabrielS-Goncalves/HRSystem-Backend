@@ -27,9 +27,7 @@ export const createUserRoute = async (req, res) => {
       password: password,
     });
 
-    res
-      .json({ message: "User creation was successful!" }, newUserInformations)
-      .status(201);
+    res.json({ message: "User creation was successful!" }, newUserInformations).status(201);
   } catch (error) {
     console.error("User creation was unsuccessful!", error);
     res.status(400);
@@ -38,25 +36,27 @@ export const createUserRoute = async (req, res) => {
 
 // Route for update users
 export const updateUserRoute = async (req, res) => {
-  const id = req.params.id
-  const { name, surename, email, password } = req.body
+  const id = req.params.id;
+  const { name, surename, email, password } = req.body;
 
   try {
     if (!id) {
-      res.json({ message: "User ID is required!"}).status(400)
+      res.json({ message: "User ID is required!" }).status(400);
     }
 
-    const userInformations = await usersTable.updateOne({
+    const userInformations = await usersTable.findByIdAndUpdate(id, {
       name: name,
       surename: surename,
       email: email,
-      password: password
-    })
+      password: password,
+    });
 
+    res.json({ message: "User modifier was successful!" }).status(200);
   } catch (error) {
-    
+    console.error("User modifier was unsuccessful!", error);
+    res.status(400);
   }
-}
+};
 
 // Route for delete users
 export const deleteUserRoute = async (req, res) => {
