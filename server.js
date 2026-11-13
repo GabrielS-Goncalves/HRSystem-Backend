@@ -11,8 +11,8 @@ app.use(express.json());
 // Users routes
 app.use(usersRouter)
 
+// Database conection
 mongodbConnect();
-
 
 // Server port
 app.listen(port, () => {
