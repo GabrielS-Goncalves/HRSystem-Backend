@@ -18,3 +18,13 @@ mongodbConnect();
 app.listen(port, () => {
   console.log(`Server running! Port: ${port}`);
 });
+
+process.on('SIGINT', async () => {
+  await mongodbDisconnect();
+  process.exit(0);
+})
+
+process.on('SIGTERM', async () => {
+  await mongodbDisconnect();
+  process.exit(0);
+})
