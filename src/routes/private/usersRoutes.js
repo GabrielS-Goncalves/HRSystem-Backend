@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { catchUsersRoute, createUserRoute, deleteUserRoute, updateUserRoute } from "../../controllers/users/usersController.js";
+import { searchUniqueUsersRoute, searchUsersRoute, createUserRoute, deleteUserRoute, updateUserRoute } from "../../controllers/users/usersController.js";
 export const usersRouter = Router();
 
-usersRouter.get("/users/catch", catchUsersRoute);
+usersRouter.get("/users/search/:id", searchUniqueUsersRoute);
+usersRouter.get("/users/search", searchUsersRoute);
 usersRouter.post("/users/create", createUserRoute);
-usersRouter.put("/users/update/:id", updateUserRoute);
+usersRouter.patch("/users/update/:id", updateUserRoute);
 usersRouter.delete("/users/delete/:id", deleteUserRoute);
