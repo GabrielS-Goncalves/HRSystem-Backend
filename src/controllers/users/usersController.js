@@ -1,17 +1,15 @@
 import bcrypt from "bcrypt";
 import chalk from "chalk";
 import "dotenv/config";
-import { usersTable } from "../../models/users/usersSchema.js";
-import { postgresConnect, postgresConnector, postgresDisconnect } from "../../configs/postgresDatabase.js";
+import { postgresConnector } from "../../configs/postgresDatabase.js";
 
-const jwtSecret = process.env.JWT_SECRET;
+// const jwtSecret = process.env.JWT_SECRET;
 
 // Route for search all users
 export const searchUsersRoute = async (req, res) => {
   try {
-    // postgresConnect();
     const users = await postgresConnector.query(`SELECT * FROM system_users`);
-    // postgresDisconnect();
+
     res.json(users.rows);
   } catch (error) {
     console.error(error);
@@ -27,9 +25,8 @@ export const searchUniqueUsersRoute = async (req, res) => {
   }
 
   try {
-    // postgresConnect();
     const user = await postgresConnector.query("SELECT * FROM system_users WHERE id=$1", [id]);
-    // postgresDisconnect();
+
     res.json(user.rows).status(200);
   } catch (error) {
     console.error(error)
@@ -49,16 +46,16 @@ export const createUserRoute = async (req, res) => {
       return;
     }
 
-    // postgresConnect();
+
     const newUserInformations = await postgresConnector.query(`
       INSERT INTO system_users(name, surename, email, password) 
         VALUES($1, $2, $3, $4) RETURNING *`, [name, surename, email, hashPassword]
     );
-    // postgresDisconnect();
+
       
     res.json({ message: "User creation was successful!" }, newUserInformations.rows[0]).status(201);
   } catch (error) {
-    console.error("User creation was unsuccessful!", error);
+    console.error(chalk.red("User creation was unsuccessful!"), error);
     res.status(400);
   }
 };
@@ -73,27 +70,17 @@ export const updateUserRoute = async (req, res) => {
   try {
     if (!id) {
       res.json({ message: "User ID is required!" }).status(400);
-    } else if (!surename || !email || !password) {
-
     } else {
-      // postgresConnect();
+      
       const userInformations = await postgresConnector.query(`
         UPDATE system_users SET name=$1, surename=$2, email=$3, password=$4 WHERE id=$5 RETURNING *
         `,[name, surename, email, hashPassword, id]);
-      // postgresDisconnect();
+      
       res.json({ message: "User modifier was successful!" }, userInformations.rows[0]).status(200);
     }
 
-
-    // const userInformations = await usersTable.findByIdAndUpdate(id, {
-    //   name: name,
-    //   surename: surename,
-    //   email: email,
-    //   password: password,
-    // });
-
   } catch (error) {
-    console.error("User modifier was unsuccessful!", error);
+    console.error(chalk.red("User modifier was unsuccessful!"), error);
     res.status(400);
   }
 };
@@ -106,12 +93,10 @@ export const deleteUserRoute = async (req, res) => {
     if (!id) {
       res.json({ message: "User ID is required!" }).status(400);
     }
-
     const userID = await postgresConnector.query("DELETE FROM system_users WHERE id=$1", [id]);
-
     res.json({ message: "User deletation was successful!" }, userID).status(204);
   } catch (error) {
-    console.error("User deletation was unsuccessful!", error);
+    console.error(chalk.red("User deletation was unsuccessful!"), error);
     res.status(400);
   }
 };

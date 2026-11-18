@@ -1,8 +1,9 @@
 import express from "express";
 import chalk from "chalk";
 import "dotenv/config";
-import { mongodbConnect, mongodbDisconnect } from "./src/configs/mongoDatabase.js";
-import { usersRouter } from "./src/routes/private/usersRoutes.js";
+import { privateRouters } from "./src/routes/private/routes.js";
+import { publicRouters } from "./src/routes/public/routes.js";
+import { testsRouters } from "./src/routes/tests/routes.js";
 import { postgresConnect, postgresDisconnect } from "./src/configs/postgresDatabase.js";
 
 const app = express();
@@ -10,12 +11,18 @@ const port = process.env.HTTP_PORT;
 
 app.use(express.json());
 
-// Users routes
-app.use(usersRouter)
-
 // Database conection
-// mongodbConnect();
 postgresConnect();
+
+// Private routes
+app.use("/system", privateRouters);
+
+// Public routes
+app.use("/app", publicRouters);
+
+// Test routes
+app.use("/tests", testsRouters);
+
 
 // Server port
 try {
