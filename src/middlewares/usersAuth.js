@@ -6,17 +6,17 @@ const jwtSecret = process.env.JWT_SECRET;
 export const usersAuth = (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
-    return res.json({ message: "Access denied!" }).status(401);
+    res.status(401).json({ message: "Access denied!" });
   } else {
     try {
       const decoded = jwt.verify(token.replace("Bearer ", ""), jwtSecret);
-      if (decoded === true) {
-        next();
+      if (decoded === false) {
+        res.status(401).json({ message: "Invalid token!" });
       } else {
-        return res.json({ message: "Invalid token!" }).status(401);
+        next();
       }
     } catch (error) {
-      return res.json({ message: "Invalid token!" }, error).status(401);
+      res.status(401).json({ message: "Invalid token!" }, error);
     }
   }
 }
