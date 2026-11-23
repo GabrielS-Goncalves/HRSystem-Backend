@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import chalk from "chalk";
 import "dotenv/config";
 import { privateRouters } from "./src/routes/private/routes.js";
@@ -10,7 +11,7 @@ const app = express();
 const port = process.env.HTTP_PORT;
 
 app.use(express.json());
-
+app.use(cors());
 // Database conection
 postgresConnect();
 
@@ -18,7 +19,7 @@ postgresConnect();
 app.use("/system", privateRouters);
 
 // Public routes
-app.use("/app", publicRouters);
+app.use("/iam", publicRouters);
 
 // Test routes
 app.use("/tests", testsRouters);
