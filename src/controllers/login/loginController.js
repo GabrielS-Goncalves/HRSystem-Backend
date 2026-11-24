@@ -25,8 +25,8 @@ export const usersFrontendLogin = async (req, res) => {
             res.status(400).json({ message: "Wrong password!" });
           } else {
             const token = jwt.sign({id: userCredentials.id}, jwtSecret, {expiresIn: "1h"},);
-            console.log(token);
-            res.status(200).json("OK");
+            console.log("Login successfully!");
+            res.status(200).json(token);
           };
         };
       };

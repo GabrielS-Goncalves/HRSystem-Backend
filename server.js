@@ -19,7 +19,7 @@ postgresConnect();
 app.use("/system", privateRouters);
 
 // Public routes
-app.use("/iam", publicRouters);
+app.use("/app", publicRouters);
 
 // Test routes
 app.use("/tests", testsRouters);
