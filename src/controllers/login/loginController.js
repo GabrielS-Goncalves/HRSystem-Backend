@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { postgresConnector } from "../../configs/postgresDatabase.js";
 
 const jwtSecret = process.env.JWT_SECRET;
+const nodeEnv = process.env.NODE_ENV;
 
 export const usersFrontendLogin = async (req, res) => {
   try {
@@ -26,7 +27,13 @@ export const usersFrontendLogin = async (req, res) => {
           } else {
             const token = jwt.sign({id: userCredentials.id}, jwtSecret, {expiresIn: "1h"},);
             console.log("Login successfully!");
-            res.status(200).json(token);
+            res.cookie("authToken", token, {
+              httpOnly: true,
+              secure: nodeEnv === "production",
+              sameSite: "strict",
+              path: "/",
+            });
+            res.status(200).json({ message: "Login successfully!"});
           };
         };
       };
